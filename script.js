@@ -1,12 +1,12 @@
 // script.js
 
-const bannedWords = ["sag", "kill", "butt", "tit", "fuk", "shine", "ass", "sm", "ho"];
-const exceptions = ["gringo", "buta", "anus", "gaiji", "chinc", "insin", "twat", "tata", "tard", "smut", "suck", "phuq", "ombo", "nabo", "muff", "kuso", "kick", "keto", "cbt", "gay", "gei", "jcb", "jew", "jot", "omg", "omu", "poa", "pud", "baka", "boob", "bomb", "damn", "debu", "dick", "cock", "gash", "isis", "jerk", "roa", "bum", "aho", "xx", "jj", "3p", "ifica", "sex", "tits", "inko", "cul", "impo", "etti"];
+const special = ["sag", "kill", "butt", "tit", "fuk", "shine", "ass", "sm", "ho"];
+const bannedWords = ["gringo", "buta", "anus", "gaiji", "chinc", "insin", "twat", "tata", "tard", "smut", "suck", "phuq", "ombo", "nabo", "muff", "kuso", "kick", "keto", "cbt", "gay", "gei", "jcb", "jew", "jot", "omg", "omu", "poa", "pud", "baka", "boob", "bomb", "damn", "debu", "dick", "cock", "gash", "isis", "jerk", "roa", "bum", "aho", "xx", "jj", "3p", "ifica", "sex", "tits", "inko", "cul", "impo", "etti"];
 
 const input = document.getElementById("input");
 const output = document.getElementById("output");
 
-function findOffenses(text, banned, exceptions) {
+function findOffenses(text, banned, bannedWords) {
   const offenses = [];
 
   // ---------- helpers ----------
@@ -46,8 +46,8 @@ function findOffenses(text, banned, exceptions) {
       }
     });
 
-    // exceptions (ALWAYS trigger)
-    exceptions.forEach(word => {
+    // bannedWords (ALWAYS trigger)
+    bannedWords.forEach(word => {
       let idx = buffer.indexOf(word);
       while (idx !== -1) {
         let start = bufferMap[idx];
@@ -108,6 +108,6 @@ function escapeHTML(str) {
 
 input.addEventListener("input", () => {
   const text = input.value;
-  const offenses = findOffenses(text, bannedWords, exceptions);
+  const offenses = findOffenses(text, special, bannedWords);
   output.innerHTML = highlight(text, offenses);
 });
