@@ -1,20 +1,17 @@
 // script.js
 
 const bannedWords = ["inko", "sag", "kill", "butt", "sex", "tit", "fuk", "ifica", "3p", "jj", "xx", "aho", "bum", "cbt", "gay", "gei", "jcb", "jew", "jot", "omg", "omu", "poa", "pud", "roa", "baka", "boob", "bomb", "damn", "debu", "dick", "cock", "gash", "isis", "jerk", "keto", "kick", "kuso", "muff", "nabo", "ombo", "phuq", "suck", "smut", "tard", "tata", "twat", "insin", "chinc", "gaiji", "shine", "gaiji", "ass", "anus", "buta", "sm", "gringo", "ho"];
+const exceptions = ["impo", "etti"];
 
 const input = document.getElementById("input");
 const output = document.getElementById("output");
 
-function findOffenses(text, banned) {
+function findOffenses(text, banned, exceptions) {
   const offenses = [];
 
-  let buffer = "";
-  let bufferMap = [];
-
+  // ---------- helpers ----------
   function expandRange(start, end) {
-    // include spaces before
     while (start > 0 && text[start - 1] === " ") start--;
-    // include spaces after
     while (end < text.length - 1 && text[end + 1] === " ") end++;
     return [start, end];
   }
@@ -28,9 +25,14 @@ function findOffenses(text, banned) {
     return false;
   }
 
+  // ---------- build normalized stream ----------
+  let buffer = "";
+  let bufferMap = [];
+
   function flushBuffer() {
     if (!buffer) return;
 
+    // banned words (space-sensitive)
     banned.forEach(word => {
       let idx = buffer.indexOf(word);
       while (idx !== -1) {
@@ -40,7 +42,17 @@ function findOffenses(text, banned) {
         if (hasRequiredSpace(start, end)) {
           offenses.push(expandRange(start, end));
         }
+        idx = buffer.indexOf(word, idx + 1);
+      }
+    });
 
+    // exceptions (ALWAYS trigger)
+    exceptions.forEach(word => {
+      let idx = buffer.indexOf(word);
+      while (idx !== -1) {
+        let start = bufferMap[idx];
+        let end = bufferMap[idx + word.length - 1];
+        offenses.push(expandRange(start, end));
         idx = buffer.indexOf(word, idx + 1);
       }
     });
@@ -96,6 +108,6 @@ function escapeHTML(str) {
 
 input.addEventListener("input", () => {
   const text = input.value;
-  const offenses = findOffenses(text, bannedWords);
+  const offenses = findOffenses(text, bannedWords, exceptions);
   output.innerHTML = highlight(text, offenses);
 });
