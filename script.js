@@ -1,7 +1,7 @@
 // script.js
 
-const bannedWords = ["inko", "sag", "kill", "butt", "sex", "tit", "fuk", "ifica", "3p", "jj", "xx", "aho", "bum", "cbt", "gay", "gei", "jcb", "jew", "jot", "omg", "omu", "poa", "pud", "roa", "baka", "boob", "bomb", "damn", "debu", "dick", "cock", "gash", "isis", "jerk", "keto", "kick", "kuso", "muff", "nabo", "ombo", "phuq", "suck", "smut", "tard", "tata", "twat", "insin", "chinc", "gaiji", "shine", "gaiji", "ass", "anus", "buta", "sm", "gringo", "ho"];
-const exceptions = ["cul", "impo", "etti"];
+const bannedWords = ["sag", "kill", "butt", "tit", "fuk", "ifica", "3p", "jj", "xx", "aho", "bum", "cbt", "gay", "gei", "jcb", "jew", "jot", "omg", "omu", "poa", "pud", "roa", "baka", "boob", "bomb", "damn", "debu", "dick", "cock", "gash", "isis", "jerk", "keto", "kick", "kuso", "muff", "nabo", "ombo", "phuq", "suck", "smut", "tard", "tata", "twat", "insin", "chinc", "gaiji", "shine", "gaiji", "ass", "anus", "buta", "sm", "gringo", "ho"];
+const exceptions = ["sex", "tits", "inko", "cul", "impo", "etti"];
 
 const input = document.getElementById("input");
 const output = document.getElementById("output");
