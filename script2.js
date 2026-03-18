@@ -9,9 +9,9 @@ const output = document.getElementById("output");
 function findOffenses(text, highList, lowList) {
   const offenses = [];
 
-  // Build alphanumeric-only normalized string
+  // Normalize text (alphanumeric only)
   let normalized = "";
-  const indexMap = []; // normalized index -> original index
+  const indexMap = [];
 
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
@@ -29,21 +29,26 @@ function findOffenses(text, highList, lowList) {
 
   // ---------- HIGH profanity ----------
   highList.forEach(word => {
-    let idx = normalized.indexOf(word);
+    const normalizedWord = word.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+
+    let idx = normalized.indexOf(normalizedWord);
     while (idx !== -1) {
       let start = indexMap[idx];
-      let end = indexMap[idx + word.length - 1];
+      let end = indexMap[idx + normalizedWord.length - 1];
+
       offenses.push(expandSpaces(start, end));
-      idx = normalized.indexOf(word, idx + 1);
+      idx = normalized.indexOf(normalizedWord, idx + 1);
     }
   });
 
   // ---------- LOW profanity ----------
   lowList.forEach(word => {
-    let idx = normalized.indexOf(word);
+    const normalizedWord = word.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+
+    let idx = normalized.indexOf(normalizedWord);
     while (idx !== -1) {
       let start = indexMap[idx];
-      let end = indexMap[idx + word.length - 1];
+      let end = indexMap[idx + normalizedWord.length - 1];
 
       const hasSpaceBefore = start > 0 && text[start - 1] === " ";
       const hasSpaceAfter = end < text.length - 1 && text[end + 1] === " ";
@@ -52,7 +57,7 @@ function findOffenses(text, highList, lowList) {
         offenses.push(expandSpaces(start, end));
       }
 
-      idx = normalized.indexOf(word, idx + 1);
+      idx = normalized.indexOf(normalizedWord, idx + 1);
     }
   });
 
