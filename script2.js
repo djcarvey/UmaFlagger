@@ -1,7 +1,9 @@
 // script.js
 
-const highProfanity = ["pd a", "ubre", "k1ll", "rading", "arei", "pedo", "injun", "naga", "sixty nine", "69", "terf", "assi", "unti", "shota", "hate", "puto", "anal", "gringo", "buta", "anus", "gaiji", "chinc", "insin", "twat", "tata", "tard", "smut", "suck", "phuq", "ombo", "nabo", "muff", "kuso", "kick", "keto", "cbt", "gay", "gei", "jcb", "jew", "jot", "omg", "omu", "poa", "pud", "baka", "boob", "bomb", "damn", "debu", "dick", "cock", "gash", "isis", "jerk", "roa", "bum", "aho", "xx", "jj", "3p", "ifica", "sex", "tits", "inko", "cul", "impo", "etti"];
+const highProfanity = ["ubre", "k1ll", "rading", "arei", "pedo", "injun", "naga", "sixty nine", "69", "terf", "assi", "unti", "shota", "hate", "puto", "anal", "gringo", "buta", "anus", "gaiji", "chinc", "insin", "twat", "tata", "tard", "smut", "suck", "phuq", "ombo", "nabo", "muff", "kuso", "kick", "keto", "cbt", "gay", "gei", "jcb", "jew", "jot", "omg", "omu", "poa", "pud", "baka", "boob", "bomb", "damn", "debu", "dick", "cock", "gash", "isis", "jerk", "roa", "bum", "aho", "xx", "jj", "3p", "ifica", "sex", "tits", "inko", "cul", "impo", "etti"];
 const lowProfanity = ["abo", "sag", "kill", "butt", "tit", "fuk", "shine", "ass", "sm", "ho", "hit"];
+// currently this one does not do anything, I am actually stumped how to do this egregious case
+const specialCase = ["pd a"];
 
 const input = document.getElementById("input");
 const output = document.getElementById("output");
@@ -9,9 +11,9 @@ const output = document.getElementById("output");
 function findOffenses(text, highList, lowList) {
   const offenses = [];
 
-  // Normalize text (alphanumeric only)
+  // Build alphanumeric-only normalized string
   let normalized = "";
-  const indexMap = [];
+  const indexMap = []; // normalized index -> original index
 
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
@@ -29,26 +31,21 @@ function findOffenses(text, highList, lowList) {
 
   // ---------- HIGH profanity ----------
   highList.forEach(word => {
-    const normalizedWord = word.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-
-    let idx = normalized.indexOf(normalizedWord);
+    let idx = normalized.indexOf(word);
     while (idx !== -1) {
       let start = indexMap[idx];
-      let end = indexMap[idx + normalizedWord.length - 1];
-
+      let end = indexMap[idx + word.length - 1];
       offenses.push(expandSpaces(start, end));
-      idx = normalized.indexOf(normalizedWord, idx + 1);
+      idx = normalized.indexOf(word, idx + 1);
     }
   });
 
   // ---------- LOW profanity ----------
   lowList.forEach(word => {
-    const normalizedWord = word.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-
-    let idx = normalized.indexOf(normalizedWord);
+    let idx = normalized.indexOf(word);
     while (idx !== -1) {
       let start = indexMap[idx];
-      let end = indexMap[idx + normalizedWord.length - 1];
+      let end = indexMap[idx + word.length - 1];
 
       const hasSpaceBefore = start > 0 && text[start - 1] === " ";
       const hasSpaceAfter = end < text.length - 1 && text[end + 1] === " ";
@@ -57,7 +54,7 @@ function findOffenses(text, highList, lowList) {
         offenses.push(expandSpaces(start, end));
       }
 
-      idx = normalized.indexOf(normalizedWord, idx + 1);
+      idx = normalized.indexOf(word, idx + 1);
     }
   });
 
